@@ -48,26 +48,26 @@ pipeline{
     failure{
          emailext body: '''Hi Team,
 Build failed
-Landmark Technologies''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
+Marius Kinhouande''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
 
     }
     success{
          emailext body: '''Hi Team,
 Build succeeded
-Landmark Technologies''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
+Marius Kinhouande''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
 
     }
     always{
          emailext body: '''Hi Team,
 Build status
-Landmark Technologies''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
+Marius Kinhouande''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
 
     }
   }
   
 }
 
-Jenkinsfile1: scripted
+//Jenkinsfile1: scripted
 
 node{
   def mavenHome: tool name "maven3.9.2"
