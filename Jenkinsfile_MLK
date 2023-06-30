@@ -20,10 +20,7 @@ node{
   stage('6Notification'){
     emailext body: '''Hi Team,
 Build status
-Marius Kinhouande''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
+Landmark Technologies''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
   }
-}
-/*
-Marius Kinhouande''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
-  }
+*/
 }
