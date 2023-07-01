@@ -1,25 +1,37 @@
+def mavenhome ="/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/maven3.9.2"
+// MAKE SURE ALL RESPECTIVE SERVERS AND APPS ARE RUNNING TO PREVENT FAILS 
 node{
-  def mavenHome = tool name: 'maven3.9.2'
-  stage('1Clone'){
-   https://github.com/Kin-Marius/maven-web-application.git
+  stage('1.CodeClone'){
+      git "https://github.com/Kin-Marius/maven-web-application.git"
+      // Use the git command to clone your repository. Replace the URL with the link to your repository.
   }
-  stage('2Test+build'){
-    sh "${mavenHome}/bin/mvn clean package"
+  stage('2.MavenBuild'){
+      sh "${mavenhome}/bin/mvn package"
+      // Make sure to configure the Maven installation in Jenkins and provide the correct path to the 'mvn' command.
   }
+  stage('3.CodeQualityAnalysis'){
+      sh "${mavenhome}/bin/mvn sonar:sonar"
+      // Make sure your SQ server is running & Change IP in Pom.xml
+  }
+  stage('4.Upload2Nexus'){
+      sh "${mavenhome}/bin/mvn deploy"
+  }
+  stage('5.Deploy2UAT'){
+      deploy adapters: [tomcat8(credentialsId: 'tomcat-credentials', path: '', url: 'http://54.208.41.82:8177/')], contextPath: null, war: 'target/*war'
+      // Make sure Tomcat is started on your server & Generate a 'Pipeline Syntax' for a deploy adapter
+  }
+  stage('6.ManualApproval'){
+      sh "echo 'Notifying reviewers that the application is ready for review.' "
+      timeout(time:5, unit:'HOURS') {
+          input message: 'Application ready for deployment, Please review and approve'
+          // Reviewers have 5 Hours to Manually approve || Note - You can change mins/hours if needed
+      }
+  }
+  stage('7.Deploy2Pro'){
+      deploy adapters: [tomcat8(credentialsId: 'tomcat-credentials', path: '', url: 'http://54.208.41.82:8177/')], contextPath: null, war: 'target/*war'
+      // I used the same pipeline syntax for my deployment to production 
+  }
+  stage('8.Notification'){
+     emailext body: '''Hello Team,
 
-  stage('SonarQube'){
-    sh "${mavenHome}/bin/mvn sonar:sonar"
-  }
-  stage('4UploadArtifacts'){
-    sh "${mavenHome}/bin/mvn deploy"
-  }
-
-  stage('5Deploy'){
-    deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://54.208.41.82:8177/')], contextPath: null, war: 'target/*war'
-  stage('6Notification'){
-    emailext body: '''Hi Team,
-Build status
-Marius Kinhouande''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
-  }
-
-}
+Build is done.
