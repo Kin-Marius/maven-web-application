@@ -1,12 +1,12 @@
 node{
   def mavenHome = tool name: 'maven3.9.2'
   stage('1Clone'){
-    git 'https://github.com/Kin-Marius/maven-web-application'
+   https://github.com/Kin-Marius/maven-web-application.git
   }
   stage('2Test+build'){
     sh "${mavenHome}/bin/mvn clean package"
   }
-/*
+
   stage('SonarQube'){
     sh "${mavenHome}/bin/mvn sonar:sonar"
   }
@@ -16,11 +16,10 @@ node{
 
   stage('5Deploy'){
     deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://54.208.41.82:8177/')], contextPath: null, war: 'target/*war'
-  }
   stage('6Notification'){
     emailext body: '''Hi Team,
 Build status
-Landmark Technologies''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
+Marius Kinhouande''', recipientProviders: [developers(), contributor()], subject: 'build status', to: 'developers'
   }
-*/
+
 }
