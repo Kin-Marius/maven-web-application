@@ -2,7 +2,7 @@ def mavenhome = "/var/lib/jenkins/tools/hudson.tasks.Maven_MavenInstallation/mav
 // MAKE SURE ALL RESPECTIVE SERVERS AND APPS ARE RUNNING TO PREVENT FAILS 
 node{
   stage('1.CodeClone'){
-      git "https://github.com/jensenkokou/maven-web-application"
+      git "https://github.com/Kin-Marius/maven-web-application.git"
       // Use the git command to clone your repository. Replace the URL with the link to your repository.
   }
   stage('2.MavenBuild'){
@@ -17,7 +17,7 @@ node{
       sh "${mavenhome}/bin/mvn deploy"
   }
   stage('5.Deploy2UAT'){
-      deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://3.86.203.143:8177/')], contextPath: null, war: 'target/*war'
+      deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://54.208.41.82:8177/')], contextPath: null, war: 'target/*war'
       // Make sure Tomcat is started on your server & Generate a 'Pipeline Syntax' for a deploy adapter
   }
   stage('6.ManualApproval'){
@@ -28,7 +28,7 @@ node{
       }
   }
   stage('7.Deploy2Prod'){
-      deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://3.86.203.143:8177/')], contextPath: null, war: 'target/*war'
+      deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://54.208.41.82:8177/')], contextPath: null, war: 'target/*war'
       // I used the same pipeline syntax for my deployment to production 
   }
   stage('8.Notification'){
@@ -36,7 +36,7 @@ node{
 
 Build is done.
 
-LANDMARKTECH - DevOps Team''', recipientProviders: [developers(), contributor(), upstreamDevelopers()], subject: 'Build Status', to: 'Jensen.kokou@gmail.com'
+LANDMARKTECH - DevOps Team''', recipientProviders: [developers(), contributor(), upstreamDevelopers()], subject: 'Build Status', to: 'mariusluckinhouande@gmail.com'
 // Create a pipeline syntax for a personalized email to members of your team. 
   }
 }
